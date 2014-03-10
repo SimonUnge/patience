@@ -44,7 +44,15 @@ handle_call({test}, _From, State) ->
     Reply = deck_manager:show_deck(),
     {reply, Reply, State};
 handle_call({draw_cards}, _From, State) ->
-    {reply, "No more cards left in the deck.", State}.
+    case deck_manager:deck_size() of
+        N when N > 3 ->
+            Cards = draw_four_cards(),
+            Piles = State#state.piles,
+            NewPiles = pile_util:add_one_card_to_each_pile(Cards, Piles),
+            {reply, NewPiles, State#state{piles = NewPiles}};
+        N when N =< 3 ->
+            {reply, "No more cards left in the deck.", State}
+    end.
 
 handle_cast(_Msg, State) ->
     {noreply, State}.
@@ -57,3 +65,6 @@ terminate(_Reason, _State) ->
 
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
+
+draw_four_cards() ->
+    deck_manager:draw_N_cards(4).

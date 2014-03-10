@@ -1,0 +1,9 @@
+{application,patience_game,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib,deckerl]},
+              {mod,{patience_game_app,[]}},
+              {env,[]},
+              {modules,[patience_game_app,patience_game_sup,patience_manager,
+                        pile_util]}]}.

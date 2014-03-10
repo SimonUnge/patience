@@ -13,7 +13,10 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {pile1 = [], pile2 = [], pile3 = [], pile4 = []}).
+-record(state, {piles = [{pile1, []},
+                         {pile2, []},
+                         {pile3, []},
+                         {pile4, []}]}).
 
 %%%===================================================================
 %%% API
@@ -27,24 +30,21 @@ draw_cards() ->
 
 test() ->
     gen_server:call(?MODULE, {test}).
+
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
 
 
 init([]) ->
+    deck_manager:shuffle_deck(),
     {ok, #state{}}.
 
 handle_call({test}, _From, State) ->
     Reply = deck_manager:show_deck(),
     {reply, Reply, State};
 handle_call({draw_cards}, _From, State) ->
-    NewState = State#state{pile1 = [deck_manager:draw_top_card() | State#state.pile1],
-                           pile2 = [deck_manager:draw_top_card() | State#state.pile2],
-                           pile3 = [deck_manager:draw_top_card() | State#state.pile3],
-                           pile4 = [deck_manager:draw_top_card() | State#state.pile4]
-                          },
-    {reply, NewState, NewState}.
+    {reply, "No more cards left in the deck.", State}.
 
 handle_cast(_Msg, State) ->
     {noreply, State}.

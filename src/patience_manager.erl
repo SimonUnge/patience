@@ -3,7 +3,7 @@
 
 %% API
 -export([start_link/0,
-         test/0,
+         show_piles/0,
          draw_cards/0
         ]).
 
@@ -28,8 +28,8 @@ start_link() ->
 draw_cards() ->
     gen_server:call(?MODULE, {draw_cards}).
 
-test() ->
-    gen_server:call(?MODULE, {test}).
+show_piles() ->
+    gen_server:call(?MODULE, {show_piles}).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -40,9 +40,8 @@ init([]) ->
     deck_manager:shuffle_deck(),
     {ok, #state{}}.
 
-handle_call({test}, _From, State) ->
-    Reply = deck_manager:show_deck(),
-    {reply, Reply, State};
+handle_call({show_piles}, _From, State) ->
+    {reply, State#state.piles, State};
 handle_call({draw_cards}, _From, State) ->
     case deck_manager:deck_size() of
         N when N > 3 ->

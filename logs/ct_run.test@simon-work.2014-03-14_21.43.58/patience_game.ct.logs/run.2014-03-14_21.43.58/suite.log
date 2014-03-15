@@ -1,0 +1,70 @@
+=== Suite started at 2014-03-14 21:43:58
+=== Starting test, 1 test cases
+=cases         1
+=user          simon
+=host          simon-work
+=hosts         simon-work 
+=emulator_vsn  5.10.4
+=emulator      beam
+=otp_release   R16B03-1
+=started       2014-03-14 21:43:58
+=case          ct_framework:init_per_suite
+=logfile       ct_framework.init_per_suite.html
+=group_props   [{suite,pm_SUITE}]
+=started       2014-03-14 21:43:58
+=ended         2014-03-14 21:43:58
+=result        ok
+=elapsed       1.0e-6
+=case          pm_SUITE:init_per_group
+=logfile       pm_suite.init_per_group.html
+=group_props   [{name,pm_utils}]
+=started       2014-03-14 21:43:58
+=ended         2014-03-14 21:43:58
+=result        failed: {{badmatch,{error,{not_started,deckerl}}},
+                        [{pm_SUITE,start_app_return_config,1,
+                                   [{file,"pm_SUITE.erl"},{line,41}]},
+                         {test_server,ts_tc,3,
+                                      [{file,"test_server.erl"},{line,1360}]},
+                         {test_server,run_test_case_eval1,6,
+                                      [{file,"test_server.erl"},{line,1041}]},
+                         {test_server,run_test_case_eval,9,
+                                      [{file,"test_server.erl"},{line,925}]}]}, [{pm_SUITE,
+                                                                                  start_app_return_config,
+                                                                                  41},
+                                                                                 {test_server,
+                                                                                  ts_tc,
+                                                                                  1360},
+                                                                                 {test_server,
+                                                                                  run_test_case_eval1,
+                                                                                  1041},
+                                                                                 {test_server,
+                                                                                  run_test_case_eval,
+                                                                                  925}]
+=== *** FAILED {pm_SUITE,init_per_group} ***
+=== 
+=case          pm_SUITE:get_four_empty_piles
+=group_props   [{name,"pm_utils"}]
+=started       2014-03-14 21:43:58
+=result        auto_skipped: init_per_group failed
+=== *** Skipping test case #1 {pm_SUITE,get_four_empty_piles} ***
+=== 
+=case          pm_SUITE:end_per_group
+=group_props   [{name,"pm_utils"}]
+=started       2014-03-14 21:43:58
+=result        auto_skipped: init_per_group failed
+=== *** Skipping {pm_SUITE,end_per_group} ***
+=case          ct_framework:end_per_suite
+=logfile       ct_framework.end_per_suite.html
+=group_props   [{suite,pm_SUITE}]
+=started       2014-03-14 21:43:58
+=ended         2014-03-14 21:43:58
+=result        ok
+=elapsed       1.0e-6
+=group_time    0.081s
+=== TEST COMPLETE, 0 ok, 0 failed, 1 skipped of 1 test cases
+
+=finished      2014-03-14 21:43:58
+=failed        0
+=successful    0
+=user_skipped  0
+=auto_skipped  1

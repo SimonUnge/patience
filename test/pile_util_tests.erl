@@ -10,11 +10,15 @@ pile_is_not_empty_test() ->
 
 fail_move_from_empty_pile_to_empty_pile_test() ->
     Piles = [{pile1,[]},{pile2,[]}],
-    ?assertError({badmatch, []}, pile_util:move_from_pile_to_empty_pile(Piles, pile1, pile2)).
+    ?assertError({badmatch, []}, pile_util:move_from_pile_to_empty_pile(Piles, pile1)).
 
 move_from_pile_to_empty_pile_test() ->
     Piles = [{pile1,[1,2,3]},{pile2,[]}],
-    ?assertEqual([{pile1,[2,3]},{pile2, [1]}],pile_util:move_from_pile_to_empty_pile(Piles, pile1, pile2)).
+    ?assertEqual([{pile1,[2,3]},{pile2, [1]}],pile_util:move_from_pile_to_empty_pile(Piles, pile1)).
+
+move_from_pile_to_empty_pile_no_empty_piles_test() ->
+    Piles = [{pile1,[1,2,3]},{pile2,[1,2]}],
+    ?assertEqual({error, "No empty piles"},pile_util:move_from_pile_to_empty_pile(Piles, pile1)).
 
 add_one_card_to_each_pile_test() ->
     Piles = [{pile1,[]},{pile2,[]},{pile3,[]},{pile4,[]}],

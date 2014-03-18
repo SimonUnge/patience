@@ -1,5 +1,7 @@
 patience
 ========
 TODO
-# Validate pile to pile move (Wait.. there are no valid pile to pile moves? I need to learn the rules here)
-# Validate remove card move
+# Move card to empty pile
+# See cards which can be removed
+# See if no more moves are available
+# Give error when trying to remove non valid card

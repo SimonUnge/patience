@@ -30,12 +30,9 @@ get_four_empty_piles(_Config) ->
     ?EMPTY_PILES = patience_manager:show_piles().
 
 draw_first_turn_of_cards(_Config) ->
-    FullDeck = deck_manager:show_deck(),
-    [Card1,Card2,Card3,Card4] = lists:sublist(FullDeck,4),
-    FirstTurnPiles = [{pile1, [Card1]},
-                      {pile2, [Card2]},
-                      {pile3, [Card3]},
-                      {pile4, [Card4]}],
+    FourFirstCards = lists:sublist(deck_manager:show_deck(), 4),
+    Piles = [pile1,pile2,pile3,pile4],
+    FirstTurnPiles = lists:zipwith(fun(P,C) -> {P, [C]} end, Piles, FourFirstCards),
     FirstTurnPiles = patience_manager:draw_cards().
 
 init_per_group(pm_utils, Config) ->

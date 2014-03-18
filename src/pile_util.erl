@@ -16,10 +16,9 @@ move_from_pile_to_empty_pile(Piles, From) ->
     lists:keyreplace(To, 1, Piles1, {To, [FromCard]}).
 
 add_one_card_to_each_pile(Cards, Piles) ->
-    lists:map(fun add_card_to_pile/1,
-              lists:zip(Cards,Piles)).
+    lists:zipwith(fun add_card_to_pile/2, Cards,Piles).
 
-add_card_to_pile({Card,{PileN,Pile}}) ->
+add_card_to_pile(Card,{PileN,Pile}) ->
     {PileN, [Card | Pile]}.
 
 get_empty_piles(Piles) ->

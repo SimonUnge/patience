@@ -11,7 +11,7 @@ start:
 tests: eunit commontest
 
 eunit:
-	@$(REBAR) skip_deps=true eunit
+	@$(REBAR) eunit
 
 commontest:
 	@$(REBAR) ct

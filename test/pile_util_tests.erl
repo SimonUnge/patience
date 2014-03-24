@@ -32,4 +32,39 @@ return_two_empty_piles_test() ->
 
 no_empty_piles_test() ->
     Piles = [{pile1,[1,2]},{pile2,[1,2]},{pile3,[1,2]},{pile4,[2,3]}],
-    ?assert(pile_util:exists_empty_piles(Piles)).
+    ?assertNot(pile_util:exists_empty_piles(Piles)).
+
+possible_to_remove_card_from_pile_3_test() ->
+    Piles = [{pile1, [{heart,10}]},
+             {pile2, [{spade, 3}]},
+             {pile3, [{heart,4},{heart,5}]},
+             {pile4, [{club, 2}]}],
+    PilesToRemoveFrom = [pile3],
+    ?assertEqual(PilesToRemoveFrom, pile_util:get_remove_from_piles(Piles)).
+
+possible_to_remove_card_from_pile_2_test() ->
+    Piles = [{pile1, [{heart,10}]},
+             {pile2, [{heart, 3}]},
+             {pile3, [{spade,4},{heart,5}]},
+             {pile4, []}],
+    PilesToRemoveFrom = [pile2],
+    ?assertEqual(PilesToRemoveFrom, pile_util:get_remove_from_piles(Piles)).
+
+possible_to_remove_card_from_pile_2_and_1_test() ->
+    Piles = [{pile1, [{heart,10}, {club, 2}]},
+             {pile2, [{heart, 3}]},
+             {pile3, [{heart, 11},{heart,5}]},
+             {pile4, []}],
+    PilesToRemoveFrom = [pile1, pile2],
+    ?assertEqual(PilesToRemoveFrom, pile_util:get_remove_from_piles(Piles)).
+
+remove_card_from_pile_test() ->
+    Piles = [{pile1, [{heart,10}, {club, 2}]},
+             {pile2, [{heart, 3}]},
+             {pile3, [{heart, 11},{heart,5}]},
+             {pile4, []}],
+    PoppedPiles = [{pile1, [{club, 2}]},
+                  {pile2, [{heart, 3}]},
+                  {pile3, [{heart, 11},{heart,5}]},
+                  {pile4, []}],
+    ?assertEqual(PoppedPiles, pile_util:remove_card_from_pile(pile1, Piles)).

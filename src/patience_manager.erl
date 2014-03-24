@@ -4,7 +4,9 @@
 %% API
 -export([start_link/0,
          show_piles/0,
-         draw_cards/0
+         draw_cards/0,
+         show_possible_moves/0,
+         move_from_pile_empty_pile/1
         ]).
 
 %% gen_server callbacks
@@ -31,6 +33,12 @@ draw_cards() ->
 show_piles() ->
     gen_server:call(?MODULE, {show_piles}).
 
+show_possible_moves() ->
+    gen_server:call(?MODULE, {show_possible_moves}).
+
+move_from_pile_empty_pile(Pile) ->
+    gen_server:call(?MODULE, {move_to_empty, Pile}).
+
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
@@ -51,7 +59,22 @@ handle_call({draw_cards}, _From, State) ->
             {reply, NewPiles, State#state{piles = NewPiles}};
         N when N =< 3 ->
             {reply, "No more cards left in the deck.", State}
-    end.
+    end;
+handle_call({show_possible_moves}, _From, State) ->
+    Reply = {{piles_to_remove_from, pile_util:get_remove_from_piles(State#state.piles)},
+             {empty_piles, pile_util:get_empty_piles(State#state.piles)}},
+    {reply, Reply, State};
+handle_call({move_to_empty, Pile}, _From, State) ->
+    case is_non_empty_and_empty_exists(Pile ,State#state.piles) of
+        true ->
+            NewPiles = pile_util:move_from_pile_to_empty_pile(State#state.piles, Pile),
+            Reply = ok,
+            NewState = State#state{piles = NewPiles};
+        false ->
+            Reply = "No empty piles",
+            NewState = State
+        end,
+    {reply, Reply, NewState}.
 
 handle_cast(_Msg, State) ->
     {noreply, State}.
@@ -67,3 +90,6 @@ code_change(_OldVsn, State, _Extra) ->
 
 draw_four_cards() ->
     deck_manager:draw_N_cards(4).
+
+is_non_empty_and_empty_exists(Pile, Piles) ->
+    ([] =/= proplists:get_value(Pile, Piles)) and pile_util:exists_empty_piles(Piles).

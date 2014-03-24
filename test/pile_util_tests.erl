@@ -58,7 +58,7 @@ possible_to_remove_card_from_pile_2_and_1_test() ->
     PilesToRemoveFrom = [pile1, pile2],
     ?assertEqual(PilesToRemoveFrom, pile_util:get_remove_from_piles(Piles)).
 
-remove_card_from_pile_test() ->
+pop_card_from_pile_test() ->
     Piles = [{pile1, [{heart,10}, {club, 2}]},
              {pile2, [{heart, 3}]},
              {pile3, [{heart, 11},{heart,5}]},
@@ -67,4 +67,4 @@ remove_card_from_pile_test() ->
                   {pile2, [{heart, 3}]},
                   {pile3, [{heart, 11},{heart,5}]},
                   {pile4, []}],
-    ?assertEqual(PoppedPiles, pile_util:remove_card_from_pile(pile1, Piles)).
+    ?assertEqual(PoppedPiles, pile_util:pop_card_from_pile(pile1, Piles)).

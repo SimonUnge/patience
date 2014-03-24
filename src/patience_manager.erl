@@ -6,7 +6,8 @@
          show_piles/0,
          draw_cards/0,
          show_possible_moves/0,
-         move_from_pile_empty_pile/1
+         move_from_pile_empty_pile/1,
+         pop_card_from_pile/1
         ]).
 
 %% gen_server callbacks
@@ -38,6 +39,9 @@ show_possible_moves() ->
 
 move_from_pile_empty_pile(Pile) ->
     gen_server:call(?MODULE, {move_to_empty, Pile}).
+
+pop_card_from_pile(Pile) ->
+    gen_server:call(?MODULE, {pop_from_pile, Pile}).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -71,10 +75,21 @@ handle_call({move_to_empty, Pile}, _From, State) ->
             Reply = ok,
             NewState = State#state{piles = NewPiles};
         false ->
-            Reply = "No empty piles",
+            Reply = {error, "Invalid move."},
             NewState = State
-        end,
+    end,
+    {reply, Reply, NewState};
+handle_call({pop_from_pile, Pile}, _From, State) ->
+    case is_valid_pop(Pile, State#state.piles) of
+        true ->
+            NewState = State#state{piles = pile_util:pop_card_from_pile(Pile, State#state.piles)},
+            Reply = ok;
+        false ->
+            Reply = {error, "Invalid move."},
+            NewState = State
+    end,
     {reply, Reply, NewState}.
+
 
 handle_cast(_Msg, State) ->
     {noreply, State}.
@@ -93,3 +108,6 @@ draw_four_cards() ->
 
 is_non_empty_and_empty_exists(Pile, Piles) ->
     ([] =/= proplists:get_value(Pile, Piles)) and pile_util:exists_empty_piles(Piles).
+
+is_valid_pop(Pile, Piles) ->
+    lists:member(Pile, pile_util:get_remove_from_piles(Piles)).

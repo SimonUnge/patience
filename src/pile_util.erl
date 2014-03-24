@@ -6,7 +6,7 @@
          get_empty_piles/1,
          exists_empty_piles/1,
          get_remove_from_piles/1,
-         remove_card_from_pile/2
+         pop_card_from_pile/2
         ]).
 
 move_from_pile_to_empty_pile(Piles, From) ->
@@ -56,7 +56,7 @@ any_higer_card({Suite, Value}, {_, [{Suite,Value2}|_]}) when Value < Value2 ->
 any_higer_card(_,_) ->
     false.
 
-remove_card_from_pile(Pile, Piles) ->
+pop_card_from_pile(Pile, Piles) ->
     PileCards = proplists:get_value(Pile, Piles),
     [_ | NewPileCards] = PileCards,
     lists:keyreplace(Pile, 1, Piles, {Pile, NewPileCards}).

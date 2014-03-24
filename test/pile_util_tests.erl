@@ -10,15 +10,16 @@ pile_is_not_empty_test() ->
 
 fail_move_from_empty_pile_to_empty_pile_test() ->
     Piles = [{pile1,[]},{pile2,[]}],
-    ?assertError({badmatch, []}, pile_util:move_from_pile_to_empty_pile(Piles, pile1)).
+    ?assertError({badmatch, []}, pile_util:move_from_pile_to_empty_pile(pile1, Piles)).
 
 move_from_pile_to_empty_pile_test() ->
     Piles = [{pile1,[1,2,3]},{pile2,[]}],
-    ?assertEqual([{pile1,[2,3]},{pile2, [1]}],pile_util:move_from_pile_to_empty_pile(Piles, pile1)).
+    ?assertEqual([{pile1,[2,3]},{pile2,
+    [1]}],pile_util:move_from_pile_to_empty_pile(pile1, Piles)).
 
 move_from_pile_to_empty_pile_no_empty_piles_test() ->
     Piles = [{pile1,[1,2,3]},{pile2,[1,2]}],
-    ?assertError(badarg,pile_util:move_from_pile_to_empty_pile(Piles, pile1)).
+    ?assertError(badarg,pile_util:move_from_pile_to_empty_pile(pile1, Piles)).
 
 add_one_card_to_each_pile_test() ->
     Piles = [{pile1,[]},{pile2,[]},{pile3,[]},{pile4,[]}],
@@ -68,3 +69,10 @@ pop_card_from_pile_test() ->
                   {pile3, [{heart, 11},{heart,5}]},
                   {pile4, []}],
     ?assertEqual(PoppedPiles, pile_util:pop_card_from_pile(pile1, Piles)).
+
+pop_card_from_empty_pile_test() ->
+    Piles = [{pile1, [{heart,10}, {club, 2}]},
+             {pile2, [{heart, 3}]},
+             {pile3, [{heart, 11},{heart,5}]},
+             {pile4, []}],
+    ?assertError({badmatch,[]}, pile_util:pop_card_from_pile(pile4, Piles)).

@@ -69,25 +69,16 @@ handle_call({show_possible_moves}, _From, State) ->
              {empty_piles, pile_util:get_empty_piles(State#state.piles)}},
     {reply, Reply, State};
 handle_call({move_to_empty, Pile}, _From, State) ->
-    case is_non_empty_and_empty_exists(Pile ,State#state.piles) of
-        true ->
-            NewPiles = pile_util:move_from_pile_to_empty_pile(State#state.piles, Pile),
-            Reply = ok,
-            NewState = State#state{piles = NewPiles};
-        false ->
-            Reply = {error, "Invalid move."},
-            NewState = State
-    end,
+    {Reply,NewState} = validate_and_act(fun is_non_empty_and_empty_exists/2,
+                                        fun pile_util:move_from_pile_to_empty_pile/2,
+                                        Pile,
+                                        State),
     {reply, Reply, NewState};
 handle_call({pop_from_pile, Pile}, _From, State) ->
-    case is_valid_pop(Pile, State#state.piles) of
-        true ->
-            NewState = State#state{piles = pile_util:pop_card_from_pile(Pile, State#state.piles)},
-            Reply = ok;
-        false ->
-            Reply = {error, "Invalid move."},
-            NewState = State
-    end,
+    {Reply,NewState} = validate_and_act(fun is_valid_pop/2,
+                                        fun pile_util:pop_card_from_pile/2,
+                                        Pile,
+                                        State),
     {reply, Reply, NewState}.
 
 
@@ -111,3 +102,15 @@ is_non_empty_and_empty_exists(Pile, Piles) ->
 
 is_valid_pop(Pile, Piles) ->
     lists:member(Pile, pile_util:get_remove_from_piles(Piles)).
+
+validate_and_act(Pred, Fun, Pile, State) ->
+    case Pred(Pile ,State#state.piles) of
+        true ->
+            NewPiles = Fun(Pile, State#state.piles),
+            Reply = ok,
+            NewState = State#state{piles = NewPiles};
+        false ->
+            Reply = {error, "Invalid move."},
+            NewState = State
+    end,
+    {Reply, NewState}.

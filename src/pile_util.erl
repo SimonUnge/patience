@@ -9,7 +9,7 @@
          pop_card_from_pile/2
         ]).
 
-move_from_pile_to_empty_pile(Piles, From) ->
+move_from_pile_to_empty_pile(From, Piles) ->
     EmptyPiles = get_empty_piles(Piles),
     To = hd(EmptyPiles),
     FromPile = proplists:get_value(From, Piles),

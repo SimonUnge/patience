@@ -69,7 +69,7 @@ handle_call({show_possible_moves}, _From, State) ->
              {empty_piles, pile_util:get_empty_piles(State#state.piles)}},
     {reply, Reply, State};
 handle_call({move_to_empty, Pile}, _From, State) ->
-    {Reply,NewState} = validate_and_act(fun is_non_empty_and_empty_exists/2,
+    {Reply,NewState} = validate_and_act(fun is_valid_empty_move/2,
                                         fun pile_util:move_from_pile_to_empty_pile/2,
                                         Pile,
                                         State),
@@ -97,8 +97,9 @@ code_change(_OldVsn, State, _Extra) ->
 draw_four_cards() ->
     deck_manager:draw_N_cards(4).
 
-is_non_empty_and_empty_exists(Pile, Piles) ->
-    ([] =/= proplists:get_value(Pile, Piles)) and pile_util:exists_empty_piles(Piles).
+is_valid_empty_move(Pile, Piles) ->
+    PileCards = proplists:get_value(Pile, Piles),
+    (1 < length(PileCards)) and pile_util:exists_empty_piles(Piles).
 
 is_valid_pop(Pile, Piles) ->
     lists:member(Pile, pile_util:get_remove_from_piles(Piles)).

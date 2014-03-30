@@ -4,7 +4,7 @@
 %% API
 -export([start_link/0,
          show_piles/0,
-         draw_cards/0,
+         deal_cards/1,
          show_possible_moves/0,
          move_from_pile_empty_pile/1,
          pop_card_from_pile/1
@@ -28,8 +28,8 @@
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
-draw_cards() ->
-    gen_server:call(?MODULE, {draw_cards}).
+deal_cards(Cards) when length(Cards) =:= 4 ->
+    gen_server:call(?MODULE, {deal_cards, Cards}).
 
 show_piles() ->
     gen_server:call(?MODULE, {show_piles}).
@@ -49,21 +49,14 @@ pop_card_from_pile(Pile) ->
 
 
 init([]) ->
-    deck_manager:shuffle_deck(),
     {ok, #state{}}.
 
 handle_call({show_piles}, _From, State) ->
     {reply, State#state.piles, State};
-handle_call({draw_cards}, _From, State) ->
-    case deck_manager:deck_size() of
-        N when N > 3 ->
-            Cards = draw_four_cards(),
-            Piles = State#state.piles,
-            NewPiles = pile_util:add_one_card_to_each_pile(Cards, Piles),
-            {reply, NewPiles, State#state{piles = NewPiles}};
-        N when N =< 3 ->
-            {reply, "No more cards left in the deck.", State}
-    end;
+handle_call({deal_cards, Cards}, _From, State) ->
+    Piles = State#state.piles,
+    NewPiles = pile_util:add_one_card_to_each_pile(Cards, Piles),
+    {reply, NewPiles, State#state{piles = NewPiles}};
 handle_call({show_possible_moves}, _From, State) ->
     Reply = {{piles_to_remove_from, pile_util:get_remove_from_piles(State#state.piles)},
              {empty_piles, pile_util:get_empty_piles(State#state.piles)}},
@@ -93,9 +86,6 @@ terminate(_Reason, _State) ->
 
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
-
-draw_four_cards() ->
-    deck_manager:draw_N_cards(4).
 
 is_valid_empty_move(Pile, Piles) ->
     PileCards = proplists:get_value(Pile, Piles),

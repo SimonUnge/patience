@@ -5,8 +5,7 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib,
-                  deckerl
+                  stdlib
                  ]},
   {mod, { patience_game_app, []}},
   {env, []}

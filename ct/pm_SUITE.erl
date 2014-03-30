@@ -30,10 +30,13 @@ get_four_empty_piles(_Config) ->
     ?EMPTY_PILES = patience_manager:show_piles().
 
 draw_first_turn_of_cards(_Config) ->
-    FourFirstCards = lists:sublist(deck_manager:show_deck(), 4),
+    Cards = [{hearts, 8},
+             {spades, 3},
+             {clubs, 5},
+             {diamonds, 11}],
     Piles = [pile1,pile2,pile3,pile4],
-    FirstTurnPiles = lists:zipwith(fun(P,C) -> {P, [C]} end, Piles, FourFirstCards),
-    FirstTurnPiles = patience_manager:draw_cards().
+    FirstTurnPiles = lists:zipwith(fun(P,C) -> {P, [C]} end, Piles, Cards),
+    FirstTurnPiles = patience_manager:deal_cards(Cards).
 
 init_per_group(pm_utils, Config) ->
     start_app_return_config(Config);
@@ -46,7 +49,6 @@ end_per_group(_, _Config) ->
     ok.
 
 start_app_return_config(Config) ->
-    ok = application:start(deckerl),
     ok = application:start(patience_game),
     Config.
 

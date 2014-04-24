@@ -7,7 +7,8 @@
          deal_cards/1,
          show_possible_moves/0,
          move_from_pile_empty_pile/1,
-         pop_card_from_pile/1
+         pop_card_from_pile/1,
+         show_pile_sizes/0
         ]).
 
 %% gen_server callbacks
@@ -43,6 +44,9 @@ move_from_pile_empty_pile(Pile) ->
 pop_card_from_pile(Pile) ->
     gen_server:call(?MODULE, {pop_from_pile, Pile}).
 
+show_pile_sizes() ->
+    gen_server:call(?MODULE, {show_pile_sizes}).
+
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
@@ -72,8 +76,10 @@ handle_call({pop_from_pile, Pile}, _From, State) ->
                                         fun pile_util:pop_card_from_pile/2,
                                         Pile,
                                         State),
-    {reply, Reply, NewState}.
-
+    {reply, Reply, NewState};
+handle_call({show_pile_sizes}, _From, State) ->
+    Reply = pile_util:get_pile_sizes(State#state.piles),
+    {reply, Reply, State}.
 
 handle_cast(_Msg, State) ->
     {noreply, State}.

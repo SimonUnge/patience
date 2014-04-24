@@ -63,4 +63,4 @@ pop_card_from_pile(Pile, Piles) ->
     lists:keyreplace(Pile, 1, Piles, {Pile, NewPileCards}).
 
 get_pile_sizes(Piles) ->
-    [{P, length(C)} || {P, C} <- Piles].
+    [{Pile, length(ListOfCards)} || {Pile, ListOfCards} <- Piles].

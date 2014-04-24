@@ -76,3 +76,36 @@ pop_card_from_empty_pile_test() ->
              {pile3, [{heart, 11},{heart,5}]},
              {pile4, []}],
     ?assertError({badmatch,[]}, pile_util:pop_card_from_pile(pile4, Piles)).
+
+all_empty_pile_sizes_test() ->
+    Piles = [{pile1, []},
+             {pile2, []},
+             {pile3, []},
+             {pile4, []}],
+    PileSizes = [{pile1, 0},
+                 {pile2, 0},
+                 {pile3, 0},
+                 {pile4, 0}],
+    ?assertEqual(PileSizes, pile_util:get_pile_sizes(Piles)).
+
+two_non_empty_pile_sizes_test() ->
+    Piles = [{pile1, [{heart,10}, {club, 2}]},
+             {pile2, []},
+             {pile3, [{heart,5}]},
+             {pile4, []}],
+    PileSizes = [{pile1, 2},
+                 {pile2, 0},
+                 {pile3, 1},
+                 {pile4, 0}],
+    ?assertEqual(PileSizes, pile_util:get_pile_sizes(Piles)).
+
+all_non_empty_pile_sizes_test() ->
+    Piles = [{pile1, [{heart,10}, {club, 2}]},
+             {pile2, [{club,2}, {club,7}, {club, 8}]},
+             {pile3, [{heart,5}]},
+             {pile4, [{spade,2}]}],
+    PileSizes = [{pile1, 2},
+                 {pile2, 3},
+                 {pile3, 1},
+                 {pile4, 1}],
+    ?assertEqual(PileSizes, pile_util:get_pile_sizes(Piles)).

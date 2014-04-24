@@ -6,7 +6,8 @@
          get_empty_piles/1,
          exists_empty_piles/1,
          get_remove_from_piles/1,
-         pop_card_from_pile/2
+         pop_card_from_pile/2,
+         get_pile_sizes/1
         ]).
 
 move_from_pile_to_empty_pile(From, Piles) ->
@@ -60,3 +61,9 @@ pop_card_from_pile(Pile, Piles) ->
     PileCards = proplists:get_value(Pile, Piles),
     [_ | NewPileCards] = PileCards,
     lists:keyreplace(Pile, 1, Piles, {Pile, NewPileCards}).
+
+get_pile_sizes(Piles) ->
+    [pile_size(X) || X <- Piles].
+
+pile_size({P, L}) ->
+    {P, length(L)}.

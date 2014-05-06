@@ -42,7 +42,7 @@ ok_to_remove({_,[]}, _) ->
     false;
 ok_to_remove({Pile,_}, Piles) ->
     Card = hd(proplists:get_value(Pile, Piles)),
-    any(fun any_higer_card/2, Card, Piles).
+    any(fun any_higher_card/2, Card, Piles).
 
 any(Pred, Card, [H|T]) ->
     case Pred(Card,H) of
@@ -52,9 +52,9 @@ any(Pred, Card, [H|T]) ->
 any(_Pred, _Card, []) ->
     false.
 
-any_higer_card({Suite, Value}, {_, [{Suite,Value2}|_]}) when Value < Value2 ->
+any_higher_card({Suite, Value}, {_, [{Suite,Value2}|_]}) when Value < Value2 ->
     true;
-any_higer_card(_,_) ->
+any_higher_card(_,_) ->
     false.
 
 pop_card_from_pile(Pile, Piles) ->
